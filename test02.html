@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		
+	<script>
+		
+		//用于比较两个版本大小的函数（如果返回值大于0，则a>b;小于0则a>b;等于0则a=b）
+		function compare(a, b) {
+			
+			//按照'.'将字符串分割，形成版本号的整数数组
+			var numsA = a.split('.').map((x)=>{
+				return parseInt(x);
+			});
+			var numsB = b.split('.').map((x)=>{
+				return parseInt(x);
+			});
+			
+			//对数组的元素进行一一比较
+			minLen = numsA.length <= numsB.length ? numsA.length : numsB.length;  
+			for (let i = 0; i <minLen; i++){
+				if (numsA[i] - numsB[i] != 0) {
+					return numsA[i] - numsB[i];
+				}
+			}
+			
+			return numsA.length - numsB.length;
+		}
+		
+		//用于排序的函数(采用归并排序的方法)
+		//输入是一个数组，输出是排好序的数组
+		function sortByMerge (arr) {
+			
+			// if (arr.length === 0) {
+			// 	return [];
+			// }
+			// if (arr.length === 1) {
+			// 	return arr;
+			// }
+			
+			// var middle = Math.floor((start + end) / 2);
+			
+			// var arr1 = sortByQuick(arr, 0, middle);
+			// var arr2 = sortByQuick(arr, middle+1, end);
+			
+			// return sortByTwoSortedArrs(arr1, arr2);
+			
+			let len = arr.length;
+			
+			if (len < 2) {
+				return arr;
+			}
+			
+			let middle = Math.floor(len/2),
+				arrLeft = arr.slice(0, middle),
+				arrRight = arr.slice(middle);
+			
+			return sortByTwoSortedArrs(sortByMerge(arrLeft), sortByMerge(arrRight));
+		}
+		
+		//将两个有序的数组合并成一个有序的数组
+		function sortByTwoSortedArrs(arr1, arr2) {
+			
+			//边界条件
+			if (arr1.length === 0 && arr2.length === 0) {
+				return [];
+			} else if (arr1.length === 0) {
+				return arr2;
+			} else if (arr2.length === 0){
+				return arr1;
+			}
+			
+			let index1 = 0,
+			    index2 = 0,
+				len1 = arr1.length,
+				len2 = arr2.length,
+				result = [];
+			
+			
+			while (index1 < len1 && index2 <len2) {
+				if (arr1[index1] <= arr2[index2]) {
+					result.push(arr1[index1]);
+					index1 ++;
+				} else {
+					result.push(arr2[index2]);
+					index2 ++;
+				}
+			}
+			
+			while(index1 < len1) {
+				result.push(arr1[index1]);
+				index1 ++;
+			}
+			
+			while(index2 < len2) {
+				result.push(arr2[index2]);
+				index2 ++;
+			}
+			
+			return result;
+		}
+		
+		
+		
+		
+		
+		//测试
+		//console.log(compare('1.45', '1.5'));
+		
+		// console.log(sortByTwoSortedArrs([1,3], [2,5]));
+		
+		console.log(sortByMerge([4,1]));
+		
+	</script>
+	</body>
+</html>
